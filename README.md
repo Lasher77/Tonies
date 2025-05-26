@@ -57,19 +57,23 @@ Diese Anwendung wurde als moderne Alternative zu einer FileMaker-Datenbank entwi
 
 Wenn Sie Ihre bestehenden Daten importieren möchten:
 
-1. Stellen Sie sicher, dass Python und die erforderlichen Pakete installiert sind:
+1. Stellen Sie sicher, dass Python sowie die Pakete **pandas** und **openpyxl** installiert sind:
    ```
    pip install pandas openpyxl
    ```
 
-2. Legen Sie Ihre Excel-Dateien im Verzeichnis `upload` ab:
-   - Kunden.xlsx
-   - Düfte.xlsx
-   - Zusammenstellungen.xlsx
-
-3. Führen Sie das Import-Skript aus:
+2. Wechseln Sie in das Verzeichnis `backend/db` und starten Sie das Skript `reimport_data.py`. 
+   Es fordert Sie auf, den Pfad zur Datenbank und zum Ordner mit den Excel-Dateien 
+   (`Kunden.xlsx`, `Düfte.xlsx`, `Zusammenstellungen.xlsx`) anzugeben:
    ```
-   python import_data.py
+   cd backend/db
+   python reimport_data.py
+   ```
+
+3. Optional können Sie anschließend das Korrekturskript ausführen, um eventuelle 
+   fehlerhafte Duftzuordnungen zu bereinigen:
+   ```
+   python fix_fragrance_associations.py
    ```
 
 ## Anwendungsstruktur
