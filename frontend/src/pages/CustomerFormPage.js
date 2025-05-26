@@ -89,7 +89,7 @@ const CustomerFormPage = () => {
         if (isEditMode) {
           navigate(`/customers/${id}`);
         } else {
-          navigate(`/customers/${response.id}`);
+          navigate(`/customers/${response.customer_id}`);
         }
       }, 1500);
     } catch (err) {
