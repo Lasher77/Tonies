@@ -12,7 +12,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createCustomer } from '../api';
+import { createCustomer, fetchCustomer, updateCustomer } from '../api';
 
 const CustomerFormPage = () => {
   const { id } = useParams();
@@ -35,12 +35,12 @@ const CustomerFormPage = () => {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchCustomer = async () => {
+    const loadCustomer = async () => {
       if (!isEditMode) return;
-      
+
       try {
         setLoading(true);
-        const data = await createCustomer(id);
+        const data = await fetchCustomer(id);
         setFormData(data);
         setError('');
       } catch (err) {
@@ -51,7 +51,7 @@ const CustomerFormPage = () => {
       }
     };
 
-    fetchCustomer();
+    loadCustomer();
   }, [id, isEditMode]);
 
   const handleChange = (e) => {
@@ -76,7 +76,7 @@ const CustomerFormPage = () => {
       let response;
       
       if (isEditMode) {
-        response = await createCustomer(id, formData);
+        response = await updateCustomer(id, formData);
       } else {
         response = await createCustomer(formData);
       }
@@ -89,7 +89,7 @@ const CustomerFormPage = () => {
         if (isEditMode) {
           navigate(`/customers/${id}`);
         } else {
-          navigate(`/customers/${response.id}`);
+          navigate(`/customers/${response.customer_id}`);
         }
       }, 1500);
     } catch (err) {

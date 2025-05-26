@@ -49,3 +49,21 @@ export const createComposition = async (compositionData) => {
   if (!response.ok) throw new Error('Fehler beim Erstellen der Zusammenstellung');
   return response.json();
 };
+
+// Lade einen einzelnen Kunden anhand der ID
+export const fetchCustomer = async (id) => {
+  const res = await fetch(`${API_BASE_URL}/customers/${id}`);
+  if (!res.ok) throw new Error('Fehler beim Laden des Kunden');
+  return res.json();
+};
+
+// Aktualisiere Kundendaten
+export const updateCustomer = async (id, data) => {
+  const res = await fetch(`${API_BASE_URL}/customers/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Fehler beim Aktualisieren des Kunden');
+  return res.json();
+};
