@@ -161,6 +161,13 @@ const CompositionFormPage = () => {
     
     // Gesamtmenge aktualisieren
     const totalAmount = calculateTotalAmount();
+    // Gesamtmenge darf nur 50 ml oder 100 ml betragen
+    if (totalAmount !== 50 && totalAmount !== 100) {
+      setError('Gesamtmenge muss 50 ml oder 100 ml betragen.');
+      setSuccess(false);
+      return;
+    }
+
     const compositionData = {
       ...formData,
       total_amount: totalAmount,
