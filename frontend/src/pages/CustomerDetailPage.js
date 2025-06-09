@@ -7,7 +7,7 @@ import {
   Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fetchCustomers, fetchCompositions } from '../api';
+import { fetchCustomers, fetchCompositions, deleteCustomer } from '../api';
 
 // Hilfsfunktion für dynamische API-URL
 const getApiBaseUrl = () => {
@@ -100,6 +100,16 @@ function CustomerDetailPage() {
     navigate(`/compositions/new?customerId=${id}`);
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm('Kunde wirklich löschen?')) return;
+    try {
+      await deleteCustomer(id);
+      navigate('/customers');
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   // Hilfsfunktion, um den Duftnamen anhand der ID zu finden
   const getFragranceName = (fragranceId) => {
     const fragrance = fragrances.find(f => f.fragrance_id === fragranceId);
@@ -112,10 +122,15 @@ function CustomerDetailPage() {
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Button variant="outlined" onClick={handleBack} sx={{ mb: 2 }}>
-        Zurück zur Kundenliste
-      </Button>
-      
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Button variant="outlined" onClick={handleBack}>
+          Zurück zur Kundenliste
+        </Button>
+        <Button variant="outlined" color="error" onClick={handleDelete}>
+          Kunde löschen
+        </Button>
+      </Box>
+
       <Typography variant="h5" component="h2" gutterBottom>
         Kundendetails
       </Typography>

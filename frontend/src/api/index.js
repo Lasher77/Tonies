@@ -67,3 +67,12 @@ export const updateCustomer = async (id, data) => {
   if (!res.ok) throw new Error('Fehler beim Aktualisieren des Kunden');
   return res.json();
 };
+
+// Kunde löschen
+export const deleteCustomer = async (id) => {
+  const res = await fetch(`${API_BASE_URL}/customers/${id}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) throw new Error('Fehler beim Löschen des Kunden');
+  return res.json();
+};
