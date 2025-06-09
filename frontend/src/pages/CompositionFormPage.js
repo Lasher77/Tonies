@@ -48,7 +48,8 @@ const CompositionFormPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     total_amount: 50,
-    details: []
+    details: [],
+    created_at: new Date().toISOString().split('T')[0]
   });
   
   const [newDetail, setNewDetail] = useState({
@@ -266,7 +267,7 @@ const CompositionFormPage = () => {
       <Paper sx={{ p: 3 }}>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Name der Kreation (optional)"
@@ -275,6 +276,18 @@ const CompositionFormPage = () => {
                 onChange={handleChange}
                 disabled={submitting}
                 placeholder="z.B. Sommerfrische oder Waldspaziergang"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Datum"
+                type="date"
+                name="created_at"
+                value={formData.created_at}
+                onChange={handleChange}
+                disabled={submitting}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
             
