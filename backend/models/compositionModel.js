@@ -34,19 +34,29 @@ function getCompositionDetails(compositionId, callback) {
 
 // Neue Zusammenstellung erstellen
 function createComposition(compositionData, callback) {
-  const { customer_id, name, total_amount, details } = compositionData;
+  const { customer_id, name, total_amount, details, created_at } = compositionData;
   
   // Transaktion starten
   db.serialize(() => {
     db.run('BEGIN TRANSACTION');
     
     // Zusammenstellung einfügen
+    const columns = ['customer_id', 'name', 'total_amount'];
+    const placeholders = ['?', '?', '?'];
+    const params = [customer_id, name, total_amount];
+
+    if (created_at) {
+      columns.push('created_at');
+      placeholders.push('?');
+      params.push(created_at);
+    }
+
     const compositionSql = `
-      INSERT INTO compositions (customer_id, name, total_amount)
-      VALUES (?, ?, ?)
+      INSERT INTO compositions (${columns.join(', ')})
+      VALUES (${placeholders.join(', ')})
     `;
-    
-    db.run(compositionSql, [customer_id, name, total_amount], function(err) {
+
+    db.run(compositionSql, params, function(err) {
       if (err) {
         db.run('ROLLBACK');
         return callback(err);
@@ -57,11 +67,12 @@ function createComposition(compositionData, callback) {
       // Wenn keine Details vorhanden sind, Transaktion abschließen
       if (!details || details.length === 0) {
         db.run('COMMIT');
-        return callback(null, { 
-          id: compositionId, 
-          customer_id, 
-          name, 
+        return callback(null, {
+          id: compositionId,
+          customer_id,
+          name,
           total_amount,
+          created_at: created_at || null,
           details: []
         });
       }
@@ -98,11 +109,12 @@ function createComposition(compositionData, callback) {
           if (detailsProcessed === details.length) {
             detailStmt.finalize();
             db.run('COMMIT');
-            callback(null, { 
-              id: compositionId, 
-              customer_id, 
-              name, 
+            callback(null, {
+              id: compositionId,
+              customer_id,
+              name,
               total_amount,
+              created_at: created_at || null,
               details: detailsResult
             });
           }
