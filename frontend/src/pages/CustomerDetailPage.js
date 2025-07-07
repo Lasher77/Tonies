@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  Box, Typography, Paper, Button, 
-  Table, TableBody, TableCell, TableContainer, 
+  Box, Typography, Paper, Button,
+  Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Grid, Card, CardContent,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion, AccordionSummary, AccordionDetails,
+  IconButton
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fetchCustomers, fetchCompositions, deleteCustomer } from '../api';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { fetchCustomers, fetchCompositions, deleteCustomer, deleteComposition } from '../api';
 
 // Hilfsfunktion für dynamische API-URL
 const getApiBaseUrl = () => {
@@ -25,6 +27,7 @@ function CustomerDetailPage() {
   const [fragrances, setFragrances] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedAccordion, setExpandedAccordion] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -110,6 +113,25 @@ function CustomerDetailPage() {
     }
   };
 
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : false);
+  };
+
+  const handleDeleteComposition = async (compositionId) => {
+    if (!window.confirm('Zusammenstellung wirklich löschen?')) return;
+    try {
+      await deleteComposition(compositionId);
+      setCompositions(prev => prev.filter(c => c.composition_id !== compositionId));
+      setCompositionDetails(prev => {
+        const updated = { ...prev };
+        delete updated[compositionId];
+        return updated;
+      });
+    } catch (err) {
+      console.error('Fehler beim Löschen der Zusammenstellung:', err);
+    }
+  };
+
   // Hilfsfunktion, um den Duftnamen anhand der ID zu finden
   const getFragranceName = (fragranceId) => {
     const fragrance = fragrances.find(f => f.fragrance_id === fragranceId);
@@ -178,27 +200,47 @@ function CustomerDetailPage() {
       ) : (
         <Box>
           {compositions.map((composition) => (
-            <Accordion key={composition.composition_id} sx={{ mb: 2 }}>
+            <Accordion
+              key={composition.composition_id}
+              sx={{ mb: 2 }}
+              expanded={expandedAccordion === composition.composition_id}
+              onChange={handleAccordionChange(composition.composition_id)}
+            >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`panel-${composition.composition_id}-content`}
                 id={`panel-${composition.composition_id}-header`}
               >
-                <Grid container>
-                  <Grid item xs={3}>
-                    <Typography fontWeight="bold">
-                      {composition.name || `Zusammenstellung #${composition.composition_id}`}
-                    </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <Grid container sx={{ flexGrow: 1 }}>
+                    <Grid item xs={3}>
+                      <Typography fontWeight="bold">
+                        {composition.name || `Zusammenstellung #${composition.composition_id}`}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography>{composition.total_amount} ml</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>
+                        {new Date(composition.created_at).toLocaleDateString()}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={3}>
-                    <Typography>{composition.total_amount} ml</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>
-                      {new Date(composition.created_at).toLocaleDateString()}
-                    </Typography>
-                  </Grid>
-                </Grid>
+                  {expandedAccordion === composition.composition_id && (
+                    <IconButton
+                      edge="end"
+                      color="error"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleDeleteComposition(composition.composition_id);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
+                </Box>
               </AccordionSummary>
               <AccordionDetails>
                 {compositionDetails[composition.composition_id] && 
