@@ -76,3 +76,11 @@ export const deleteCustomer = async (id) => {
   if (!res.ok) throw new Error('Fehler beim Löschen des Kunden');
   return res.json();
 };
+
+export const deleteComposition = async (id) => {
+  const res = await fetch(`${API_BASE_URL}/compositions/${id}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) throw new Error('Fehler beim Löschen der Zusammenstellung');
+  return res.json();
+};
