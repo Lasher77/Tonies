@@ -8,6 +8,34 @@ function getAllCustomers(callback) {
   db.all(sql, [], callback);
 }
 
+// Kunden mit fehlerhaften Zusammenstellungen abrufen
+function getCustomersWithInvalidCompositions(callback) {
+  const sql = `
+    WITH composition_totals AS (
+      SELECT
+        cd.composition_id,
+        SUM(cd.amount) AS total_amount
+      FROM composition_details cd
+      GROUP BY cd.composition_id
+    )
+    SELECT
+      c.customer_id,
+      c.first_name,
+      c.last_name,
+      c.first_name || ' ' || c.last_name AS full_name,
+      COUNT(*) AS invalid_composition_count
+    FROM customers c
+    INNER JOIN compositions comp ON comp.customer_id = c.customer_id
+    LEFT JOIN composition_totals ct ON ct.composition_id = comp.composition_id
+    WHERE COALESCE(ct.total_amount, comp.total_amount) NOT IN (0, 50, 100)
+    GROUP BY c.customer_id, c.first_name, c.last_name
+    HAVING COUNT(*) > 0
+    ORDER BY c.last_name, c.first_name
+  `;
+
+  db.all(sql, [], callback);
+}
+
 // Einen Kunden nach ID abrufen
 function getCustomerById(id, callback) {
   const sql = "SELECT *, first_name || ' ' || last_name AS full_name FROM customers WHERE customer_id = ?";
@@ -84,6 +112,7 @@ module.exports = {
   searchCustomers,
   createCustomer,
   updateCustomer,
-  deleteCustomer
+  deleteCustomer,
+  getCustomersWithInvalidCompositions
 };
 
