@@ -20,6 +20,42 @@ export const fetchCompositions = async () => {
   return response.json();
 };
 
+export const fetchCustomersWithInvalidCompositions = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/customers/invalid-compositions`);
+
+    if (!response.ok) {
+      let message = 'Fehler beim Laden der Kunden mit ungültigen Zusammenstellungen';
+      const payload = await response.text();
+      if (payload) {
+        try {
+          const errorBody = JSON.parse(payload);
+          if (errorBody && errorBody.error) {
+            message = errorBody.error;
+          }
+        } catch (parseError) {
+          message = payload;
+        }
+      }
+      throw new Error(message);
+    }
+
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      return data;
+    }
+    if (data && Array.isArray(data.customers)) {
+      return data.customers;
+    }
+    return [];
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Unbekannter Fehler beim Laden der Kunden mit ungültigen Zusammenstellungen');
+  }
+};
+
 export const createCustomer = async (customerData) => {
   const response = await fetch(`${API_BASE_URL}/customers`, {
     method: 'POST',

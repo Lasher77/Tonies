@@ -14,6 +14,27 @@ router.get('/', (req, res) => {
   });
 });
 
+// Kunden suchen
+router.get('/search/:term', (req, res) => {
+  const searchTerm = req.params.term;
+  customerModel.searchCustomers(searchTerm, (err, customers) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(customers);
+  });
+});
+
+// Kunden mit ungültigen Zusammenstellungen abrufen
+router.get('/invalid-compositions', (req, res) => {
+  customerModel.getCustomersWithInvalidCompositions((err, customers) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ customers });
+  });
+});
+
 // Kunden nach ID abrufen
 router.get('/:id', (req, res) => {
   const id = req.params.id;
@@ -25,17 +46,6 @@ router.get('/:id', (req, res) => {
       return res.status(404).json({ error: 'Kunde nicht gefunden' });
     }
     res.json(customer);
-  });
-});
-
-// Kunden suchen
-router.get('/search/:term', (req, res) => {
-  const searchTerm = req.params.term;
-  customerModel.searchCustomers(searchTerm, (err, customers) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(customers);
   });
 });
 
