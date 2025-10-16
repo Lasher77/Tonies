@@ -44,8 +44,10 @@ const Header = () => {
             sx={{
               flexGrow: 0,
               display: 'flex',
-              gap: 1,
-              alignItems: 'center'
+              gap: { xs: 1, md: 1.5 },
+              alignItems: { xs: 'stretch', md: 'center' },
+              flexDirection: { xs: 'column', sm: 'row' },
+              width: { xs: '100%', md: 'auto' }
             }}
           >
             <Button
@@ -53,7 +55,10 @@ const Header = () => {
               to="/customers/new"
               variant="outlined"
               color="primary"
-              sx={{ display: { xs: 'none', md: 'inline-flex' } }}
+              sx={{
+                display: 'inline-flex',
+                width: { xs: '100%', md: 'auto' }
+              }}
             >
               Neuer Kunde
             </Button>
@@ -62,7 +67,11 @@ const Header = () => {
               to="/customers/invalid"
               variant="outlined"
               color="primary"
-              sx={{ display: { xs: 'none', md: 'inline-flex' }, whiteSpace: 'nowrap' }}
+              sx={{
+                display: 'inline-flex',
+                whiteSpace: 'nowrap',
+                width: { xs: '100%', md: 'auto' }
+              }}
             >
               Unvollständige Düfte
             </Button>
