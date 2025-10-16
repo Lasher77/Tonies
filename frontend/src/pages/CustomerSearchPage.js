@@ -84,14 +84,19 @@ function CustomerSearchPage() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Button
-          variant="text"
-          size="small"
-          color="inherit"
-          sx={{ color: 'text.secondary' }}
+          variant="contained"
+          color="primary"
+          size="medium"
           onClick={handleLoadInvalidCompositions}
           disabled={invalidLoading}
+          sx={{
+            alignSelf: { xs: 'stretch', sm: 'center' },
+            minWidth: { sm: 280 },
+            whiteSpace: { xs: 'normal', sm: 'nowrap' },
+            textAlign: 'center'
+          }}
         >
-          Ungültige Zusammenstellungen anzeigen
+          Auswertung unvollständiger Duftzusammenstellungen
         </Button>
       </Box>
       
