@@ -40,15 +40,31 @@ const Header = () => {
             </Button>
           </Box>
           
-          <Box sx={{ flexGrow: 0 }}>
-            <Button 
-              component={RouterLink} 
-              to="/customers/new" 
-              variant="outlined" 
+          <Box
+            sx={{
+              flexGrow: 0,
+              display: 'flex',
+              gap: 1,
+              alignItems: 'center'
+            }}
+          >
+            <Button
+              component={RouterLink}
+              to="/customers/new"
+              variant="outlined"
               color="primary"
               sx={{ display: { xs: 'none', md: 'inline-flex' } }}
             >
               Neuer Kunde
+            </Button>
+            <Button
+              component={RouterLink}
+              to="/customers/invalid"
+              variant="outlined"
+              color="primary"
+              sx={{ display: { xs: 'none', md: 'inline-flex' }, whiteSpace: 'nowrap' }}
+            >
+              Unvollständige Düfte
             </Button>
           </Box>
         </Toolbar>
