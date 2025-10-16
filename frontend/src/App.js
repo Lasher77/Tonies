@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import CustomerSearchPage from './pages/CustomerSearchPage';
 import CustomerDetailPage from './pages/CustomerDetailPage';
 import CustomerFormPage from './pages/CustomerFormPage';
+import InvalidCompositionCustomersPage from './pages/InvalidCompositionCustomersPage';
 import FragranceListPage from './pages/FragranceListPage';
 import FragranceFormPage from './pages/FragranceFormPage';
 import CompositionFormPage from './pages/CompositionFormPage';
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/customers" element={<CustomerSearchPage />} />
           <Route path="/customers/new" element={<CustomerFormPage />} />
+          <Route path="/customers/invalid" element={<InvalidCompositionCustomersPage />} />
           <Route path="/customers/:id" element={<CustomerDetailPage />} />
           <Route path="/customers/:id/edit" element={<CustomerFormPage />} />
           <Route path="/customers/:id/compositions/new" element={<CompositionFormPage />} />
