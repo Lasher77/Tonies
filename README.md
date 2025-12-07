@@ -138,8 +138,9 @@ Die Anwendung bietet folgende Hauptfunktionen:
 - **Apple-Silicon (ARM64) und SQLite**: Wenn beim Start des Backends die Meldung
   `node_sqlite3.node` mit *incompatible architecture (have 'x86_64', need 'arm64')*
   erscheint, wurde das SQLite-Binding für die falsche Architektur installiert.
-  Entfernen Sie das bestehende `node_modules`-Verzeichnis im Backend und bauen Sie
-  das Binding neu:
+  Entfernen Sie das bestehende `node_modules`-Verzeichnis im Backend und lassen Sie
+  das vorkompilierte Binding erneut herunterladen (so ist keine lokale
+  `distutils`-Installation nötig):
   ```
   cd backend
   rm -rf node_modules
