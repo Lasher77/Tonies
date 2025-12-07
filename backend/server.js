@@ -5,8 +5,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 
+// Environment configuration
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+
 // Routen importieren
-const API_BASE_URL = 'http://192.168.1.108:5001/api';
 const customerRoutes = require('./routes/customers');
 const fragranceRoutes = require('./routes/fragrances');
 const compositionRoutes = require('./routes/compositions');
@@ -18,8 +20,21 @@ const HOST = '0.0.0.0'; // ← das ist wichtig!
 
 
 // Middleware
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim())
+  : ['*'];
+
+app.set('trust proxy', 1);
+
 app.use(cors({
-  origin: '*', // Erlaubt Zugriff von allen Domains
+  origin: allowedOrigins.includes('*')
+    ? true
+    : (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+        return callback(new Error('Nicht erlaubte Origin'), false);
+      },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

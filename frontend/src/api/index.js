@@ -1,6 +1,16 @@
-const API_BASE_URL = window.location.hostname === 'localhost' 
-  ? 'http://localhost:5001/api'
-  : `${window.location.protocol}//${window.location.hostname}:5001/api`;
+const getApiBaseUrl = () => {
+  if (process.env.REACT_APP_API_BASE_URL) {
+    return process.env.REACT_APP_API_BASE_URL.replace(/\/$/, '');
+  }
+
+  if (window.location.hostname === 'localhost') {
+    return 'http://localhost:5001/api';
+  }
+
+  return `${window.location.origin}/api`;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const fetchCustomers = async ()  => {
   const response = await fetch(`${API_BASE_URL}/customers`);
