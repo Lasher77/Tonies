@@ -135,6 +135,18 @@ Die Anwendung bietet folgende Hauptfunktionen:
 - **Backend startet nicht**: Überprüfen Sie, ob Port 5000 bereits verwendet wird
 - **Frontend zeigt keine Daten an**: Stellen Sie sicher, dass das Backend läuft
 - **Datenimport schlägt fehl**: Überprüfen Sie das Format Ihrer Excel-Dateien
+- **Apple-Silicon (ARM64) und SQLite**: Wenn beim Start des Backends die Meldung
+  `node_sqlite3.node` mit *incompatible architecture (have 'x86_64', need 'arm64')*
+  erscheint, wurde das SQLite-Binding für die falsche Architektur installiert.
+  Entfernen Sie das bestehende `node_modules`-Verzeichnis im Backend und bauen Sie
+  das Binding neu:
+  ```
+  cd backend
+  rm -rf node_modules
+  npm install
+  npm run rebuild-sqlite
+  ```
+  Anschließend sollte der Backend-Start ohne Architekturfehler funktionieren.
 
 ## Cloudflare-Tunnel
 
