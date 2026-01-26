@@ -19,10 +19,14 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.error('Fehler beim Verbinden zur Datenbank:', err.message);
   } else {
     console.log('Verbindung zur SQLite-Datenbank hergestellt.');
+
+    // Optimierungen für bessere Performance und Zuverlässigkeit
+    db.run('PRAGMA journal_mode = WAL');      // Write-Ahead Logging für bessere Concurrent-Reads
+    db.run('PRAGMA busy_timeout = 5000');     // 5 Sekunden warten bei Lock statt sofort scheitern
+    db.run('PRAGMA synchronous = NORMAL');    // Gute Balance zwischen Performance und Sicherheit
+    db.run('PRAGMA cache_size = -2000');      // 2MB Cache
+    db.run('PRAGMA foreign_keys = ON');       // Foreign Keys aktivieren
   }
 });
-
-// Aktiviere Foreign Keys
-db.run('PRAGMA foreign_keys = ON');
 
 module.exports = db;

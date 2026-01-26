@@ -32,6 +32,16 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.set('trust proxy', 1);
 
+// Request-Logging für Debugging
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`${new Date().toISOString()} | ${req.method} ${req.path} | ${res.statusCode} | ${duration}ms`);
+  });
+  next();
+});
+
 app.use(cors({
   origin: allowedOrigins.includes('*')
     ? true
