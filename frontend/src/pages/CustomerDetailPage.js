@@ -13,9 +13,11 @@ import { fetchCustomers, fetchCompositions, deleteCustomer, deleteComposition } 
 
 // Hilfsfunktion für dynamische API-URL
 const getApiBaseUrl = () => {
-  return window.location.hostname === 'localhost' || window.location.hostname === '192.168.1.108'
-    ? 'http://192.168.1.108:5001/api'
-    : `${window.location.protocol}//${window.location.hostname}:5001/api`;
+  if (window.location.hostname === 'localhost') {
+    return 'http://localhost:5001/api';
+  }
+  // Für Cloudflare-Tunnel: gleicher Origin, kein Port nötig
+  return `${window.location.origin}/api`;
 };
 
 function CustomerDetailPage() {
