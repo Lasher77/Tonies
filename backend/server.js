@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
@@ -31,6 +32,9 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   : ['*'];
 
 app.set('trust proxy', 1);
+
+// Kompression für alle Antworten (reduziert 2MB auf ~100KB)
+app.use(compression());
 
 // Request-Logging für Debugging
 app.use((req, res, next) => {
