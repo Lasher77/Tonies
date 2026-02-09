@@ -72,7 +72,19 @@ ln -s ../.env .env.local   # oder alternativ: cp ../.env .env.local
    ```
    npm start
    ```
-   Die Anwendung wird dann im Browser unter http://localhost:3000 geöffnet.
+   Dadurch wird das Frontend im Entwicklungsmodus (inklusive Hot-Reloading) unter http://localhost:3000 gestartet.
+
+4. Erstellen Sie ein optimiertes Produktions-Build:
+   ```
+   npm run build
+   ```
+   Das fertige Build befindet sich anschließend im Ordner `frontend/build`.
+
+5. Starten Sie das erstellte Build lokal, zum Beispiel mit dem `serve`-Paket:
+   ```
+   npx serve -s build
+   ```
+   Die statischen Dateien werden daraufhin standardmäßig unter http://localhost:3000 ausgeliefert.
 
 ## Datenimport
 
